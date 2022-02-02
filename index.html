@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+    <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel='stylesheet' type='text/css' href='CSS.css'>
+    <link rel = "icon" href = ""> 
+    <script type="text/javascript" src="JS.js"></script>
+    </head>
+
+    <body>
+        <h1>WORDLE (RU)</h1>
+        <hr>
+        <div id="topRow">
+            <div id="left">
+                <button type="button" id="rules">
+                    <img src="media/help.png" width="20px">
+                </button>
+            </div>
+            <div id="right">
+                <button type="button" id="stats">
+                    <img src="media/stats.png" width="20px">
+                </button>
+            </div>
+        </div>
+        <div id='guesses'>
+            <div class = 'row1'>
+                <span class='col1 letter' id='letter0'>&nbsp;</span>
+                <span class='col2 letter' id='letter1'>&nbsp;</span>
+                <span class='col3 letter' id='letter2'>&nbsp;</span>
+                <span class='col4 letter' id='letter3'>&nbsp;</span>
+                <span class='col5 letter' id='letter4'>&nbsp;</span>
+            </div>
+            <div class = 'row2'>
+                <span class='col1 letter' id='letter5'>&nbsp;</span>
+                <span class='col2 letter' id='letter6'>&nbsp;</span>
+                <span class='col3 letter' id='letter7'>&nbsp;</span>
+                <span class='col4 letter' id='letter8'>&nbsp;</span>
+                <span class='col5 letter' id='letter9'>&nbsp;</span>
+            </div>
+            <div class = 'row3'>
+                <span class='col1 letter' id='letter10'>&nbsp;</span>
+                <span class='col2 letter' id='letter11'>&nbsp;</span>
+                <span class='col3 letter' id='letter12'>&nbsp;</span>
+                <span class='col4 letter' id='letter13'>&nbsp;</span>
+                <span class='col5 letter' id='letter14'>&nbsp;</span>
+            </div>
+            <div class = 'row4'>
+                <span class='col1 letter' id='letter15'>&nbsp;</span>
+                <span class='col2 letter' id='letter16'>&nbsp;</span>
+                <span class='col3 letter' id='letter17'>&nbsp;</span>
+                <span class='col4 letter' id='letter18'>&nbsp;</span>
+                <span class='col5 letter' id='letter19'>&nbsp;</span>
+            </div>
+            <div class = 'row5'>
+                <span class='col1 letter' id='letter20'>&nbsp;</span>
+                <span class='col2 letter' id='letter21'>&nbsp;</span>
+                <span class='col3 letter' id='letter22'>&nbsp;</span>
+                <span class='col4 letter' id='letter23'>&nbsp;</span>
+                <span class='col5 letter' id='letter24'>&nbsp;</span>
+            </div>
+            <div class = 'row6'>
+                <span class='col1 letter' id='letter25'>&nbsp;</span>
+                <span class='col2 letter' id='letter26'>&nbsp;</span>
+                <span class='col3 letter' id='letter27'>&nbsp;</span>
+                <span class='col4 letter' id='letter28'>&nbsp;</span>
+                <span class='col5 letter' id='letter29'>&nbsp;</span>
+            </div>
+        </div>
+
+
+        <div id="keyboard">
+            <div id='keyboardTop'>
+                <span id="key0">
+                    <button id="keyLetter0">
+                        Й
+                    </button>
+                </span>
+                <span id="key1">
+                    <button id="keyLetter1">
+                        Ц
+                    </button>
+                </span>
+                <span id="key2">
+                    <button id="keyLetter2">
+                        У
+                    </button>
+                </span>
+                <span id="key3">
+                    <button id="keyLetter3">
+                        К
+                    </button>
+                </span>
+                <span id="key4">
+                    <button id="keyLetter4">
+                        Е
+                    </button>   
+                </span>
+                <span id="key5">
+                    <button id="keyLetter5">
+                        Н
+                    </button> 
+                </span>
+                <span id="key6">
+                    <button id="keyLetter6">
+                        Г
+                    </button> 
+                </span>
+                <span id="key7">
+                    <button id="keyLetter7">
+                        Ш
+                    </button> 
+                </span>
+                <span id="key8">
+                    <button id="keyLetter8">
+                        Щ
+                    </button> 
+                </span>
+                <span id="key9">
+                    <button id="keyLetter9">
+                        З
+                    </button> 
+                </span>
+                <span id="key10">
+                    <button id="keyLetter10">
+                        Х
+                    </button> 
+                </span>
+                <span id="key11">
+                    <button id="keyLetter11">
+                        Ъ
+                    </button> 
+                </span>
+                <span id="key12">
+                    <button id="keyLetter12">
+                        Ё
+                    </button> 
+                </span>
+            </div>
+            <div id="keyboardMiddle">
+                <span id="key13">
+                    <button id="keyLetter13">
+                        Ф
+                    </button> 
+                </span>
+                <span id="key14">
+                    <button id="keyLetter14">
+                        Ы
+                    </button> 
+                </span>
+                <span id="key15">
+                    <button id="keyLetter15">
+                        В
+                    </button> 
+                </span>
+                <span id="key16">
+                    <button id="keyLetter16">
+                        А
+                    </button> 
+                </span>
+                <span id="key17">
+                    <button id="keyLetter17">
+                        П
+                    </button> 
+                </span>
+                <span id="key18">
+                    <button id="keyLetter18">
+                        Р
+                    </button> 
+                </span>
+                <span id="key19">
+                    <button id="keyLetter19">
+                        О
+                    </button> 
+                </span>
+                <span id="key20">
+                    <button id="keyLetter20">
+                        Л
+                    </button> 
+                </span>
+                <span id="key21">
+                    <button id="keyLetter21">
+                        Д
+                    </button> 
+                </span>
+                <span id="key22">
+                    <button id="keyLetter22">
+                        Ж
+                    </button> 
+                </span>
+                <span id="key23">
+                    <button id="keyLetter23">
+                        Э
+                    </button> 
+                </span>
+            </div>
+            <div id="keyboardBottom">
+                <span id="key24">
+                    <button id="keyLetter24">
+                        ВВОД
+                    </button> 
+                </span>
+                <span id="key25">
+                    <button id="keyLetter25">
+                        Я
+                    </button> 
+                </span>
+                <span id="key26">
+                    <button id="keyLetter26">
+                        Ч
+                    </button> 
+                </span>
+                <span id="key27">
+                    <button id="keyLetter27">
+                        С
+                    </button> 
+                </span>
+                <span id="key28">
+                    <button id="keyLetter28">
+                        М
+                    </button> 
+                </span>
+                <span id="key29">
+                    <button id="keyLetter29">
+                        И
+                    </button> 
+                </span>
+                <span id="key30">
+                    <button id="keyLetter30">
+                        Т
+                    </button> 
+                </span>
+                <span id="key31">
+                    <button id="keyLetter31">
+                        Ь
+                    </button> 
+                </span>
+                <span id="key32">
+                    <button id="keyLetter32">
+                        Б
+                    </button> 
+                </span>
+                <span id="key33">
+                    <button id="keyLetter33">
+                        Ю
+                    </button> 
+                </span>
+                <span id="key34">
+                    <button id="keyLetter34" class="special">
+                        ⌫
+                    </button> 
+                </span>
+            </div>
+        </div>
+
+
+        <!--POPUPS FROM HERE DOWN-->
+        <div class="hide" id='container'>
+            <div id='popup'>
+                <div id='actual'>
+                    <h1>
+                        HOW TO PLAY
+                    </h1>
+                    <button id='close' type='button' onclick=''>X</button>
+                    <div id="left-align">
+                        <p>
+                            Guess the WORDLE in 6 tries
+                            <br><br>
+                            Each guess must be a valid 5 letter word. Hit the enter button to submit.
+                            <br><br>
+                            After each guess, the color of the tiles will change to show how close your guess was to the word.
+                            <br>
+                        </p>
+                        <hr>
+                        <p>
+                            EXAMPLES
+                            <div class="exampleLetters">
+                                <span class='egletter word1' id='egletter0'>G</span>
+                                <span class='egletter word1' id='egletter1'>R</span>
+                                <span class='egletter word1' id='egletter2'>E</span>
+                                <span class='egletter word1' id='egletter3'>A</span>
+                                <span class='egletter word1' id='egletter4'>T</span>
+                            </div>
+                            <p>The letter W is in the word and in the correct spot.</p>
+                            <div class="exampleLetters">
+                                <span class='egletter word2' id='egletter5'></span>
+                                <span class='egletter word2' id='egletter6'></span>
+                                <span class='egletter word2' id='egletter8'></span>
+                                <span class='egletter word2' id='egletter9'></span>
+                                <span class='egletter word2' id='egletter10'></span>
+                            </div>
+                            <p>The letter I is in the word but in the wrong spot.</p>
+                            <div class="exampleLetters">
+                                <span class='egletter word3' id='egletter0'></span>
+                                <span class='egletter word3' id='egletter1'></span>
+                                <span class='egletter word3' id='egletter2'></span>
+                                <span class='egletter word3' id='egletter3'></span>
+                                <span class='egletter word3' id='egletter4'></span> 
+                            </div>
+                            <p>The letter U is not in the word in any spot.</p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hide" id="statsScreen">
+            <div id='statsPopup'>
+                <h1>STATISTICS</h1>
+                <div class="centerMe">
+                    <h2>
+                        <span class="partOfStats aZero" id="playedNum">0</span>
+                        <span class="partOfStats aZero" id="winPercentNum">0</span>
+                        <span class="partOfStats aZero" id="currentStreakNum">0</span>
+                        <span class="partOfStats aZero" id="maxStreakNum">0</span>
+                    </h2>
+                </div>
+                <div class="centerMe" id='statsLabels'>
+                    <ul>
+                        <li>
+                            <span class="partOfStats aDescrpition" id="played">Played</span>
+                        </li>
+                        <li>
+                            <span class="partOfStats aDescrpition" id="winPercent">Win %</span>
+                        </li>
+                        <li>
+                            <span class="partOfStats aDescrpition" id="currentStreak">Current Streak</span>
+                        </li>
+                        <li>
+                            <span class="partOfStats aDescrpition" id="currentStreak">Max Streak</span>
+                        </li>
+                    </ul>
+                </div>
+                <h1 id="guessDistribution">GUESS DISTRIBUTION</h1>
+                <ul id="statsBarsList">
+                    <li>
+                        <p>1 <span class="statsBar" id="statsBar0"><b>0</b></span></p>
+                    </li>
+                    <li>
+                        <p>2 <span class="statsBar" id="statsBar1"><b>0</b></span></p>
+                    </li>
+                    <li>
+                        <p>3 <span class="statsBar" id="statsBar2"><b>0</b></span></p>
+                    </li>
+                    <li>
+                        <p>4 <span class="statsBar" id="statsBar3"><b>0</b></span></p>
+                    </li>
+                    <li>
+                        <p>5 <span class="statsBar" id="statsBar4"><b>0</b></span></p>
+                    </li>
+                    <li>
+                        <p>6 <span class="statsBar" id="statsBar5"><b>0</b></span></p>
+                    </li>
+                </ul>
+
+                <div id="bottomPartPopup">
+                    <ul>
+                        <li id="countdownClockLI">
+                            <span>
+                                <h1 id="nextWordle">
+                                    NEXT WORDLE
+                                </h1>
+                                <h1 id="countdownTimer">
+                                    00:00:00
+                                </h1>
+                            </span>
+                        </li>
+                        <li id="shareLI">
+                            <h1 id="shareButton">SHARE</h1>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
