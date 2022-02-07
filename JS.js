@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     if(localStorage.getItem('everWon') != 'true'){ //if you've never won wordle, display the rules on page load
         rulesScreenToggle();
-        console.log('You have never won wordle. Kinda sad.');
+        localStorage.setItem('totalPlayed', 0);
     }
 
     let secondsAtEnter = 'invalid';
@@ -15,14 +15,21 @@ $(document).ready(function() {
     let month = now.getMonth()+1; 
     let day = now.getDate();
     let currentDate = day.toString() + month.toString() + year.toString();
-    const ordinals = ['first', 'second', 'third', 'fourth', 'fifth'];
+    let currentUSDate = month.toString() + '/' + day.toString() + '/' + year.toString();
+    var startDate = '01/01/2022';
+
+    function parseDate(str) {
+        var mdy = str.split('/');
+        return new Date(mdy[2], mdy[0]-1, mdy[1]);
+    }
+
+    wordleNumber = Math.round( (parseDate(currentUSDate)-parseDate(startDate))/(1000*60*60*24) );
 
     let lastSaved = localStorage.getItem('lastSavedDate'); //load this data if same day
     if(parseInt(lastSaved) == parseInt(currentDate)){
         for(i = 0; i<30; i++){ 
             let thisThing = eval('"letter' + i.toString() + '"'); //loading letters
             $(eval('"#' + thisThing.toString() + '"')).text(localStorage.getItem(eval('"' + thisThing +'"')));
-    
             $(eval('"#letter' + i.toString() + '"')).addClass(localStorage.getItem(eval('"color' + i.toString() + '"'))); //loading colors
         }
         
@@ -32,8 +39,11 @@ $(document).ready(function() {
             type = 0;
         } // end loading type
 
-        if(localStorage.getItem('won?') == 'true'){ //if you already won today, display the stats screen
+        if(localStorage.getItem('finishedToday') == 'true'){ //if you already won today, display the stats screen
             winScreenToggle();
+            $('#bottomPartPopup').removeClass('hide');
+        } else {
+            $('#bottomPartPopup').addClass('hide');
         }
 
     } else { //load this data if different day
@@ -45,21 +55,91 @@ $(document).ready(function() {
         }
         
         localStorage.removeItem('type');
-        localStorage.setItem('won?', false);
+        localStorage.setItem('finishedToday', false);
         type = 0; 
+        $('#bottomPartPopup').addClass('hide');
     }
 
-    if(localStorage.getItem('totalPlayed') == undefined) {
-        localStorage.setItem('totalPlayed', 0);
-        console.log('no wordles played yet');
+    function updateStatsInfo(){
+        if(Number.isInteger(parseInt(localStorage.getItem('totalWon'))) == false){ //total won
+            localStorage.setItem('totalWon', 0);
+            localStorage.setItem('lastWonDate', 0);
+        }
+    
+        if(Number.isInteger(parseInt(localStorage.getItem('totalLost'))) == false){ //total Lost
+            localStorage.setItem('totalLost', 0);
+        }
+
+        if(Number.isInteger(parseInt(localStorage.getItem('currentStreak'))) == false){ //current Streak
+            localStorage.setItem('currentStreak', 0);
+        }
+
+        if(Number.isInteger(parseInt(localStorage.getItem('maxStreak'))) == false){ //max Streak
+            localStorage.setItem('maxStreak', 0);
+        }
+
+        if(Number.isInteger(parseInt(localStorage.getItem('lastWonDate'))) == false){ //max Streak
+            localStorage.setItem('lastWonDate', 0);
+        } else {
+            var daysAgoPlayed = Math.round( (parseDate(currentUSDate)-parseDate(localStorage.getItem('lastWonDate')))/(1000*60*60*24) )
+            if(daysAgoPlayed > 1){
+                localStorage.setItem('currentStreak', 0);
+            }
+        }
+
+        totalWins = 0;
+        for(i=1; i<=6; i++){
+            currentGuessTotal = 'guess' + i;
+            if(Number.isInteger(parseInt(localStorage.getItem(currentGuessTotal))) == false){ //check if it's a number
+                localStorage.setItem(currentGuessTotal, 0);
+            }  
+            var totalWins = totalWins + parseInt(localStorage.getItem(currentGuessTotal));
+            $(eval('"#statsBar' + (i-1) + '"')).text(parseInt(localStorage.getItem(currentGuessTotal)));
+        }
+
+        for(i=1; i<=6; i++){
+            currentGuessWidth = 'guess' + i;
+            currentGuessWidth = parseInt(localStorage.getItem(currentGuessWidth))
+            currentGuessWidth = currentGuessWidth/totalWins;
+            currentGuessWidth = currentGuessWidth*365;
+            currentGuessWidth = Math.round(currentGuessWidth);
+
+            if(currentGuessWidth >= 8){
+                currentGuessWidth = currentGuessWidth + 'px';
+            } else {
+                currentGuessWidth = 'auto';
+            }
+            $(eval('"#statsBar' + (i-1) + '"')).css('width', currentGuessWidth);
+        }
+
+        if(Number.isInteger(parseInt(localStorage.getItem('totalPlayed'))) == false){ //total played
+            localStorage.setItem('totalPlayed', 0);
+        } else {
+            var percentage = (parseInt(localStorage.getItem('totalWon')))/(parseInt(localStorage.getItem('totalPlayed')));
+            percentage = percentage*100;
+            percentage = Math.round(percentage);
+            $("#winPercentNum").text(percentage);
+
+            $("#playedNum").text(localStorage.getItem('totalPlayed'));
+            $("#currentStreakNum").text(localStorage.getItem('currentStreak'));
+            $("#maxStreakNum").text(localStorage.getItem('maxStreak'));
+        }
+        
+    
     }
+
+
     const theLettersHere = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', 'Ё','Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю'];
     const keyboardOrder = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', 'Ё','Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', '0', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', '0'];
     for(i=0; i<32; i++){
         localStorage.setItem(theLettersHere[i], 'nothing');
     }
 
+    updateStatsInfo();
     updateKeyColors();
+
+
+    //END OF LOADING INFO
     function updateKeyColors(){
         for(i=0; i<29; i++){
             let currentColor = localStorage.getItem(eval('"color' + i.toString() + '"'));
@@ -85,17 +165,31 @@ $(document).ready(function() {
         $('#keyLetter' + (position).toString()).css('transition-delay', (seconds/2.5 +'s'));
     }
 
+    var startTime = new Date();
+    let hour = 23 - startTime.getHours();
+    hour = String(hour).padStart(2, '0')
+    let minute = 59 - now.getMinutes();
+    minute = String(minute).padStart(2, '0')
+    let second = 59 - now.getSeconds(); 
+    second = String(second).padStart(2, '0')
+    let time = hour + ':' + minute + ':' +  second;
+    $('#countdownTimer').text(time);
+    
+    setInterval(function(){ //every second
+        var now = new Date();
+        let hour = 23 - now.getHours();
+        hour = String(hour).padStart(2, '0')
+        let minute = 59 - now.getMinutes();
+        minute = String(minute).padStart(2, '0')
+        let second = 59 - now.getSeconds(); 
+        second = String(second).padStart(2, '0')
+        let time = hour + ':' + minute + ':' +  second;
+        $('#countdownTimer').text(time);
+    }, 1000); 
+
     //CSS START
     let height = $(window).height();
     $('#popup').css('height', height);
-
-    setInterval(function(){ //every second
-        let now = new Date();
-        let hour = now.getHours();
-        let minute = now.getMinutes();
-        let second = now.getSeconds(); 
-        let time = hour.toString() + ':' + minute.toString() + ':' +  second.toString();
-    }, 1000); 
 
     $( window ).resize(function() {
         let width = $(window).width();
@@ -112,8 +206,6 @@ $(document).ready(function() {
     if(bMobile == 'true') {
         alert('You are viewing this website on a mobile device. It is not optimized for mobile and I would suggest switching to a computer.');
     }
-
-
 
     //END CSS
 
@@ -139,12 +231,10 @@ $(document).ready(function() {
     number = Math.floor(Math.random() * (commonWords.length));
     // let wordOfTheDay = commonWords[number];
     let wordOfTheDay = commonWords[hashAlgorithm(day, month, year)];
-    console.log(wordOfTheDay); 
     const alphabet = 'АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯяGg';
     let word = '';
 
     function updateHTML(type, word, store){
-        console.log(word);
         for(i=0; i<5; i++){
             let myCurrentLetter = parseInt(type) + i;
             if(word.slice(i, i+1) != ''){
@@ -178,19 +268,22 @@ $(document).ready(function() {
     function winScreenToggle(){
         var statsScreen = document.getElementById("statsScreen"); //yes i know it's not jQuery for some reason $('#container') does not work so that
         statsScreen.classList.toggle("hide");
-        console.log('stats toggled');
         if(localStorage.getItem('statsScreen') == "true"){
             localStorage.setItem('statsScreen', false);
         } else {
             localStorage.setItem('statsScreen', true);
         }
+
+
+        //Setting all the screen values
+        updateStatsInfo();
     }
+
     document.getElementById("close").addEventListener("click", rulesScreenToggle);
     document.getElementById("rules").addEventListener("click", rulesScreenToggle);
     document.getElementById("stats").addEventListener("click", winScreenToggle);
 
     function rulesScreenToggle(){
-        console.log('rules toggled');
         var popup = document.getElementById("container"); //yes i know it's not jQuery for some reason $('#container') does not work so that
         popup.classList.toggle("hide");
         if(localStorage.getItem('winScreen') == "true"){
@@ -199,10 +292,38 @@ $(document).ready(function() {
             localStorage.setItem('winScreen', true);
         }
     }
+
+    $('#shareButton').click(function() {
+        shareBoxes = 'Wordle ' + wordleNumber + ': ' + localStorage.getItem('currentGuessesToday') + '/6 \n';
+        for(i=0; i<(localStorage.getItem('currentGuessesToday')*5); i++){
+            if(i%5 == 0){
+                shareBoxes = shareBoxes + '\n';
+            }
+            currentShareBoxColor = localStorage.getItem(eval('"color' + i +'"'));
+            if(currentShareBoxColor == 'green') {
+                shareBoxes = shareBoxes + '🟩';
+            } else if(currentShareBoxColor == 'yellow'){
+                shareBoxes = shareBoxes + '🟨';
+            } else if(currentShareBoxColor == 'black'){
+                shareBoxes = shareBoxes + '⬛';
+            }
+        }
+          navigator.clipboard.writeText(shareBoxes);
+          $("#shareButton").text('Copied!');
+          setTimeout(function(){ //every second
+            $("#shareButton").text('SHARE');
+        }, 3000); 
+    });
+
     function enterWasPressed(){
-        if(localStorage.getItem('won?') != 'true') {
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = now.getMonth()+1; 
+        let day = now.getDate();
+        let currentUSDate = month.toString() + '/' + day.toString() + '/' + year.toString();
+
+        if(localStorage.getItem('finishedToday') != 'true') {
             let valid = false;
-            console.log(word);
             if(word.length != 5){
                 alert('Please enter a five letter long word.');
             } else{
@@ -229,7 +350,6 @@ $(document).ready(function() {
                             $("#letter" + (totalNumber).toString()).addClass('green');
                             localStorage.setItem(eval('"color' + totalNumber + '"'), 'green');//Green End
                         } else if(wordOfTheDay.includes(guessLetter)){ //Yellow start
-                            console.log('this is for letter ' + i);
                             let guessInstances = 5 - (word.replaceAll(guessLetter, '')).length;
                             let realInstances = 5 - (wordOfTheDay.replaceAll(guessLetter, '')).length;
     
@@ -251,11 +371,9 @@ $(document).ready(function() {
                                 }
                                 totalGreenAndPastYellow = totalGreen + pastYellow;
                                 if(realInstances>totalGreenAndPastYellow){
-                                    console.log('more instances of the letter in the word than total greens and past yellows pastgreen and yellow is ' + totalGreenAndPastYellow);
                                     $("#letter" + (totalNumber).toString()).addClass('yellow');
                                     localStorage.setItem(eval('"color' + totalNumber + '"'), 'yellow');
                                     pastYellow ++;
-                                    console.log('past yellow increasing');
                                 } else {
                                     $("#letter" + (totalNumber).toString()).addClass('black');
                                     localStorage.setItem(eval('"color' + totalNumber + '"'), 'black');
@@ -266,16 +384,57 @@ $(document).ready(function() {
                             localStorage.setItem(eval('"color' + totalNumber + '"'), 'black');
                         }
                     }
-    
 
                     if(word == wordOfTheDay){ //what happens if you get the word right
-                        localStorage.setItem('won?', true);
-                        localStorage.setItem('everWon', true);
-                        winScreenToggle();
-                        localStorage.setItem('totalPlayed', (localStorage.getItem('totalPlayed') + 1)); //total played
+                        $('#bottomPartPopup').removeClass('hide');
+                        localStorage.setItem('lastWonDate', currentUSDate);
+                        setTimeout(() => {  
+                            localStorage.setItem('finishedToday', true);
+                            localStorage.setItem('everWon', true); //everFinished
+                            localStorage.setItem('totalPlayed', (parseInt(localStorage.getItem('totalPlayed')) + 1)); //total played
+                            localStorage.setItem('totalWon', (parseInt(localStorage.getItem('totalWon')) + 1)); //total won
+
+                            if(type == 0){ //won on which guess
+                                localStorage.setItem('guess1', (parseInt(localStorage.getItem('guess1')) + 1));
+                            } else if(type == 5){
+                                localStorage.setItem('guess2', (parseInt(localStorage.getItem('guess2')) + 1));
+                            } else if(type == 10){
+                                localStorage.setItem('guess3', (parseInt(localStorage.getItem('guess3')) + 1));
+                            } else if(type == 15){
+                                localStorage.setItem('guess4', (parseInt(localStorage.getItem('guess4')) + 1));
+                            } else if(type == 20){
+                                localStorage.setItem('guess5', (parseInt(localStorage.getItem('guess5')) + 1));
+                            } else if(type == 25){
+                                localStorage.setItem('guess6', (parseInt(localStorage.getItem('guess6')) + 1));
+                            }
+
+                            localStorage.setItem('currentGuessesToday', ((type/5) + 1));
+
+                            let currentStreak = localStorage.getItem('currentStreak');
+                            let maxStreak = localStorage.getItem('maxStreak');
+                            currentStreak = parseInt(currentStreak) + 1;
+                            localStorage.setItem('currentStreak', currentStreak);
+                            if(currentStreak > maxStreak){
+                                localStorage.setItem('maxStreak', currentStreak);
+                            } else {
+                                localStorage.setItem('maxStreak', maxStreak);
+                            }
+                            winScreenToggle();
+                        }, 2000);
                     } else {
                         if(parseInt(type)>=25){ //what happens if you run out of guesses
-                            setTimeout(() => {  alert('You lose :( The wordle was ' + wordOfTheDay); }, 2000);
+                            setTimeout(() => {  
+                                alert('You lose :( The wordle was ' + wordOfTheDay); 
+                                winScreenToggle();
+                            }, 2000);
+
+                            $('#bottomPartPopup').removeClass('hide');
+                            localStorage.setItem('finishedToday', true);
+                            localStorage.setItem('everWon', true); //everFinished
+                            localStorage.setItem('totalPlayed', (parseInt(localStorage.getItem('totalPlayed')) + 1)); //Total Played
+                            localStorage.setItem('totalLost', (parseInt(localStorage.getItem('totalLost')) + 1)); //Total Lost
+                            localStorage.setItem('currentStreak', 0); //reset current streak
+                            localStorage.setItem('currentGuessesToday', 'X');
                         } else {
                             type = parseInt(type) + 5;
                             localStorage.setItem('type', parseInt(type));
@@ -301,7 +460,7 @@ $(document).ready(function() {
     document.addEventListener("keydown", function(event) {
         let letter = event.key;
         if(letter == 'Backspace'){
-            if(localStorage.getItem('won?') != 'true'){
+            if(localStorage.getItem('finishedToday') != 'true'){
                 word = word.slice(0, -1);
                 updateHTML(type, word, false);
             }
@@ -313,6 +472,11 @@ $(document).ready(function() {
             newKey(letter);
         }
     });
+
+
+
+
+
 
         //BEGINNING OF THE REPETITIVE CODE AHHHHHH DON'T LOOK AT THIS IF YOU WANT TO KNOW HOW TO WRITE GOOD CODE
         $('#key0').click(function() {
@@ -683,7 +847,7 @@ $(document).ready(function() {
         });
     
         $('#key34').click(function() {
-            if(localStorage.getItem('won?') != 'true'){
+            if(localStorage.getItem('finishedToday') != 'true'){
                 word = word.slice(0, -1);
                 updateHTML(type, word, false);
             }
